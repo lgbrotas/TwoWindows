@@ -18,6 +18,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
 import { ipcRenderer, contextBridge } from 'electron';
 
+// https://www.electronjs.org/docs/api/context-bridge#contextbridge
+// https://github.com/electron/electron/issues/21437
+
+
 contextBridge.exposeInMainWorld(
   'electron',
   {
@@ -25,30 +29,17 @@ contextBridge.exposeInMainWorld(
   }
 )
 
+// https://github.com/electron/electron/issues/21437#issuecomment-573522360
+
+contextBridge.exposeInMainWorld('myapi', {
+  request: (data) => ipcRenderer.send("request", {
+    data,
+  }),
+  onResponse: (fn) => {
+    // Deliberately strip event as it includes `sender`
+    ipcRenderer.on('response', (event, ...args) => fn(...args));
+  }
+)
+
 // https://stackoverflow.com/questions/44008674/how-to-import-the-electron-ipcrenderer-in-a-react-webpack-2-setup
-
-//import { contextBridge, ipcRenderer } from 'electron';
-
-// Expose protected methods that allow the renderer process to use
-// the ipcRenderer without exposing the entire object
-//contextBridge.exposeInMainWorld(
-    //"api", {
-        //send: (channel, data) => {
-        //request: (channel, data) => {
-            // whitelist channels
-            //let validChannels = ["toMain"];
-            //if (validChannels.includes(channel)) {
-                //ipcRenderer.send(channel, data);
-            //}
-        //},
-        //receive: (channel, func) => {
-        //response: (channel, func) => {
-            //let validChannels = ["fromMain"];
-            //if (validChannels.includes(channel)) {
-                // Deliberately strip event as it includes `sender` 
-                //ipcRenderer.on(channel, (event, ...args) => func(...args));
-            //}
-        //}
-    //}
-//);
 

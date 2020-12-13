@@ -80,3 +80,15 @@ ipcMain.handle('my-invokable-ipc', async (event, ...args) => {
   const result = await somePromise(...args);
   return result;
 })
+
+
+// https://github.com/electron/electron/issues/21437#issuecomment-573522360
+
+ipcMain.on("request", (IpcMainEvent, args) => {
+    // Use node module (ie. "fs");
+    // perhaps save value of args.data to file with a timestamp
+
+    mainWindow.webContents.send("response", {
+        success: true
+    });
+});

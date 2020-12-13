@@ -6,13 +6,20 @@ window.electron.doThing();
 
 //const electron = window.require('electron');
 
-//import { ipcRenderer, BrowserWindow } from 'electron';
+import { ipcRenderer, BrowserWindow } from 'electron';
 
-//ipcRenderer.on('messageFromMain', (event, message) => {
-//  console.log(`This is the message from the second window sent via main: ${message}`);
-//});
+// https://github.com/electron/electron/issues/21437#issuecomment-573522360
 
-//async () => {
-//  const result = await ipcRenderer.invoke('my-invokable-ipc', "this is my message")
-  // ...
-//}
+class LibraryClass {
+  classValue: number;
+  constructor(myValue = 1) {
+    this.classValue = myValue;
+    window.myapi.onResponse((args) => {
+      if (args.success) this.classValue++;
+    });
+  }
+  send() {
+    window.myapi.request(this.classValue);
+  }
+}
+
