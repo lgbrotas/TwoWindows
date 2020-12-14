@@ -48,6 +48,11 @@ contextBridge.exposeInMainWorld('myapi', {
 // https://www.electronjs.org/docs/all#behavior-changed-sending-non-js-objects-over-ipc-now-throws-an-exception
 // Sending non-serializable objects throws an "object could not be cloned" error
 
+// https://www.electronjs.org/docs/all#contextbridge
+
+
+
 contextBridge.exposeInMainWorld('electron', {
+  // https://www.electronjs.org/docs/api/ipc-renderer#ipcrenderersendchannel-args
   openNewWindow: () => ipcRenderer.send('open-new-window');
 });
