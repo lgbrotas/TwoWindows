@@ -13,6 +13,7 @@ if (require('electron-squirrel-startup')) {
 }
 
 let mainWindow;
+let mainWindow2;
 
 const createWindow = (): void => {
   // Create the browser window.
@@ -30,14 +31,26 @@ const createWindow = (): void => {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
-
   mainWindow.webContents.openDevTools();
-
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-
   // Show window when its ready to
   mainWindow.on('ready-to-show', () => mainWindow.show());
+
+ mainWindow2 = new BrowserWindow({
+    width: 800,
+    height: 600,
+    backgroundColor: '#242424',
+    show: false,
+    webPreferences: {
+      nodeIntegration: false,
+      enableRemoteModule: false,
+      contextIsolation: true,
+      nodeIntegrationInWorker: false,
+      nodeIntegrationInSubFrames: false,
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+    },
+  });
 };
 
 // This method will be called when Electron has finished
@@ -100,3 +113,18 @@ ipcMain.on("reply", (IpcMainEvent, message) => {
   console.log(event, message);
   mainWindow.webContents.send('messageFromMain', `This is the message from the second window: ${message}`);
 });
+
+
+ipcMain.on("open-second-window", (IpcMainEvent, message) => {
+  mainWindow2.webContents.on('did-finis-load', () => {
+    win.webContents.send('message', 'This is a message from the renderer process to the second window.')
+  });
+  mainWindow2.webContents.openDevTools();
+  mainWindow.on('close', () => {
+    mainWindow = null;
+  });
+  mainWindow2.loadURL(path.join('file://', process.cwd(), 'index-2.html'));
+  mainWindow2.show();
+});
+
+

@@ -33,4 +33,4 @@ window.myapi.onResponse('messageFromMain', (event, message) => {
 
 const openSecondWindowButton = document.getElementById('open-second-window');
 
-window.electron.openNewWindow();
+//window.electron.openNewWindow();

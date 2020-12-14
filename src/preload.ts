@@ -45,34 +45,9 @@ contextBridge.exposeInMainWorld('myapi', {
 
 // https://www.electronjs.org/docs/all#api-objects
 
-
-let secondWindow;
-
 // https://www.electronjs.org/docs/all#behavior-changed-sending-non-js-objects-over-ipc-now-throws-an-exception
 // Sending non-serializable objects throws an "object could not be cloned" error
 
-//contextBridge.exposeInMainWorld('electron', {
-  //openNewWindow: () => {
-    //secondWindow = new BrowserWindow({width: 1000, height: 1200});  
-  //}
-//});
-
-
-//const openSecondWindow = (): BrowserWindow => {
-  //const win = new BrowserWindow({width: 1000, height: 1200 });
-  //return win;
-//}
-
-//contextBridge.exposeInMainWorld('electron', {
-  //openNewWindow: () => ipcRenderer.send('open-second-window', openSecondWindow());
-//});
-
-//contextBridge.exposeInMainWorld('electron', {
-  //openNewWindow: () => secondWindow = new BrowserWindow({width: 1000, height: 1200});
-//});
-
 contextBridge.exposeInMainWorld('electron', {
-  openNewWindow: () => ({
-    return new BrowserWindow({width: 1000, height: 1200 });
-  })
+  openNewWindow: () => ipcRenderer.send('open-new-window');
 });
