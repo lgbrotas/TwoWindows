@@ -23,11 +23,7 @@ const createWindow = (): void => {
     backgroundColor: '#242424',
     show: false,
     webPreferences: {
-      nodeIntegration: false,
-      enableRemoteModule: false,
       contextIsolation: true,
-      nodeIntegrationInWorker: false,
-      nodeIntegrationInSubFrames: false,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
@@ -43,86 +39,28 @@ const createWindow = (): void => {
     backgroundColor: '#242424',
     show: false,
     webPreferences: {
-      nodeIntegration: false,
       enableRemoteModule: false,
       contextIsolation: true,
-      nodeIntegrationInWorker: false,
-      nodeIntegrationInSubFrames: false,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
   });
 };
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
-
-// Quit when all windows are closed.
 app.on('window-all-closed', () => {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
 
 app.on('activate', () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and import them here.
 
-
-// https://stackoverflow.com/questions/44008674/how-to-import-the-electron-ipcrenderer-in-a-react-webpack-2-setup
-
-
-//ipcMain.on("toMain", (event, args) => {
-  //fs.readFile("./sample.pdf", (error, data) => {
-    // Do something with file contents
-    // Send result back to renderer process
-    //mainWindow.webContents.send("fromMain", data);
-  //});
-//});
-
-ipcMain.handle('my-invokable-ipc', async (event, ...args) => {
-  const result = await somePromise(...args);
-  return result;
-})
-
-
-// https://github.com/electron/electron/issues/21437#issuecomment-573522360
-
-ipcMain.on("request", (IpcMainEvent, args) => {
-    // Use node module (ie. "fs");
-    // perhaps save value of args.data to file with a timestamp
-
-    mainWindow.webContents.send("response", {
-        success: true
-    });
-});
-
-// https://github.com/kahlil/electron-communication-example/blob/master/main.js
-
-ipcMain.on("reply", (IpcMainEvent, message) => {
-  console.log(event, message);
-  mainWindow.webContents.send('messageFromMain', `This is the message from the second window: ${message}`);
-});
-
-
-ipcMain.on("open-second-window", (IpcMainEvent, message) => {
-  mainWindow2.webContents.on('did-finis-load', () => {
-    win.webContents.send('message', 'This is a message from the renderer process to the second window.')
-  });
-  mainWindow2.webContents.openDevTools();
-  mainWindow.on('close', () => {
-    mainWindow = null;
-  });
+ipcMain.handle("open-second-window", (IpcMainEvent, message) => {
   mainWindow2.loadURL(path.join('file://', process.cwd(), 'index-2.html'));
   mainWindow2.show();
 });

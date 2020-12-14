@@ -10,6 +10,12 @@ interface AppState {
   counter: number;
 }
 
+declare global {
+  interface Window {
+    api: any,
+  }
+}
+
 class App extends React.Component<AppProps, AppState> {
   readonly state: AppState = { counter: 0 };
 
@@ -20,16 +26,10 @@ class App extends React.Component<AppProps, AppState> {
           <img src={logo} width='32' title='Codesbiome' /> &nbsp;
             Two Windows Communication
         </h2>
-
-        <button
-          onClick={(): void =>
-            this.setState({ counter: this.state.counter + 1 })
-          }
-        >
-          Counter &nbsp; <span>{this.state.counter}</span>
-        </button>
         <p>
-          <button id="open-second-window">Open Second Window</button>
+          <button id="open-second-window" onClick={() => {
+            window.api.send('open-second-window', '');
+          }}>Open Second Window</button>
         </p>
       </div>
     );
