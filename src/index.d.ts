@@ -6,8 +6,8 @@ declare module '*.jpeg';
 
 declare interface Window {
   electron: {
-    doThing(): void;
+    //doThing(): void;
+    openNewWindow(): void;    
   };
-
-  myapi
+  myapi;
 }

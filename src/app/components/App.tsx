@@ -17,35 +17,10 @@ class App extends React.Component<AppProps, AppState> {
     return (
       <div className='container'>
         <h2 className='heading'>
-          <img src={logo} width='32' title='Codesbiome' /> &nbsp; Electron React
-          Webpack Typescript
+          <img src={logo} width='32' title='Codesbiome' /> &nbsp;
+            Two Windows Communication
         </h2>
 
-        <p className='teaser'>
-          Minimal boilerplate for writing Desktop Applications using Electron,
-          React, Webpack & TypeScript. This project makes use of latest packages
-          like electron, react, typescript & webpack to serve the best
-          environment for development.
-        </p>
-        <p className='versions'>
-          <span className='version teaser'>
-            Electron <span id='electron-version'></span>
-          </span>
-          &nbsp;&nbsp;
-          <span className='version teaser'>
-            Chrome <span id='chrome-version'></span>
-          </span>
-          &nbsp;&nbsp;
-          <span className='version teaser'>
-            Node <span id='node-version'></span>
-          </span>
-        </p>
-        <p>
-          Click below button to update the state (counter) using 🔥
-          react-hot-loader (HMR). Component will not lose their state when
-          modifying their source code.
-          <br />
-        </p>
         <button
           onClick={(): void =>
             this.setState({ counter: this.state.counter + 1 })
@@ -53,6 +28,9 @@ class App extends React.Component<AppProps, AppState> {
         >
           Counter &nbsp; <span>{this.state.counter}</span>
         </button>
+        <p>
+          <button id="open-second-window">Open Second Window</button>
+        </p>
       </div>
     );
   }

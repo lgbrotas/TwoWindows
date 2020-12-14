@@ -1,3 +1,6 @@
+import { ipcRenderer, contextBridge, BrowserWindow} from 'electron';
+import path from 'path';
+
 console.log('preload.js says 🎉hoooraay!');
 
 // Get versions
@@ -16,19 +19,6 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-import { ipcRenderer, contextBridge } from 'electron';
-
-// https://www.electronjs.org/docs/api/context-bridge#contextbridge
-// https://github.com/electron/electron/issues/21437
-
-
-contextBridge.exposeInMainWorld(
-  'electron',
-  {
-    doThing: () => ipcRenderer.send('do-a-thing')
-  }
-)
-
 // https://github.com/electron/electron/issues/21437#issuecomment-573522360
 
 contextBridge.exposeInMainWorld('myapi', {
@@ -39,7 +29,50 @@ contextBridge.exposeInMainWorld('myapi', {
     // Deliberately strip event as it includes `sender`
     ipcRenderer.on('response', (event, ...args) => fn(...args));
   }
-)
+})
 
-// https://stackoverflow.com/questions/44008674/how-to-import-the-electron-ipcrenderer-in-a-react-webpack-2-setup
+// https://www.electronjs.org/docs/api/context-bridge#contextbridge
+// https://github.com/electron/electron/issues/21437
 
+
+//contextBridge.exposeInMainWorld(
+//  'electron',
+//  {
+//    doThing: () => ipcRenderer.send('do-a-thing')
+//  }
+//)
+
+
+// https://www.electronjs.org/docs/all#api-objects
+
+
+let secondWindow;
+
+// https://www.electronjs.org/docs/all#behavior-changed-sending-non-js-objects-over-ipc-now-throws-an-exception
+// Sending non-serializable objects throws an "object could not be cloned" error
+
+//contextBridge.exposeInMainWorld('electron', {
+  //openNewWindow: () => {
+    //secondWindow = new BrowserWindow({width: 1000, height: 1200});  
+  //}
+//});
+
+
+//const openSecondWindow = (): BrowserWindow => {
+  //const win = new BrowserWindow({width: 1000, height: 1200 });
+  //return win;
+//}
+
+//contextBridge.exposeInMainWorld('electron', {
+  //openNewWindow: () => ipcRenderer.send('open-second-window', openSecondWindow());
+//});
+
+//contextBridge.exposeInMainWorld('electron', {
+  //openNewWindow: () => secondWindow = new BrowserWindow({width: 1000, height: 1200});
+//});
+
+contextBridge.exposeInMainWorld('electron', {
+  openNewWindow: () => ({
+    return new BrowserWindow({width: 1000, height: 1200 });
+  })
+});

@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
+import url from 'url';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
@@ -91,4 +92,11 @@ ipcMain.on("request", (IpcMainEvent, args) => {
     mainWindow.webContents.send("response", {
         success: true
     });
+});
+
+// https://github.com/kahlil/electron-communication-example/blob/master/main.js
+
+ipcMain.on("reply", (IpcMainEvent, message) => {
+  console.log(event, message);
+  mainWindow.webContents.send('messageFromMain', `This is the message from the second window: ${message}`);
 });
